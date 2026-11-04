@@ -1,11 +1,36 @@
+
 using UnityEngine;
 
 public class BasicMonsterManager : MonoBehaviour
 {
-    private Flashlight totalDoorsCounter;
-    private int doorCounterNumber;
+    public int totalDoorsCounter;
+    public int doorCounterNumber = 1;
 
-    public int doorsTillPlayer = 0;
+    public bool flashedAwayLeft = true;
+    public bool flashedAwayMid = true;
+    public bool flashedAwayRight = true;
+    public bool flashedAwayDave = true;
+    public bool flashedAwayJohn = true;
+
+    public int doorsTillPlayerDave = 0;
+    public int doorsTillPlayerJohn = 0;
+    public int pickLeftDoor = 1;
+    public int pickMiddleDoor = 2;
+    public int pickRightDoor = 3;
+
+    public bool isDave = true;
+    public bool isJohn = false;
+
+    public int pickNextDoorDave;
+    public int pickNextDoorJohn;
+
+    public GameObject daveEyesLeft;
+    public GameObject daveEyesMid;
+    public GameObject johnEyesMid;
+    public GameObject johnEyesRight; 
+
+    public GameObject deathScreen;
+    public GameObject demoScreen;
 
     void Awake()
     {
@@ -15,7 +40,10 @@ public class BasicMonsterManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        daveEyesLeft.SetActive(false);
+        daveEyesMid.SetActive(false);
+        johnEyesMid.SetActive(false);
+        johnEyesRight.SetActive(false);
     }
 
     // Update is called once per frame
@@ -24,14 +52,169 @@ public class BasicMonsterManager : MonoBehaviour
         
     }
 
-    public void DeterminePhase()
+    public void MonstersInYourDoors()
     {
-        if (doorsTillPlayer == 0)
+        if (doorsTillPlayerDave == 0)
         {
-            if (doorCounterNumber <= 20)
+            if (pickNextDoorDave == 1)
             {
-                
+                daveEyesLeft.SetActive(true);
             }
+            else if (pickNextDoorDave == 2)
+            {
+                daveEyesMid.SetActive(true);
+            }
+        }
+
+        if (doorsTillPlayerJohn == 0)
+        {
+            if (pickNextDoorJohn == 2)
+            {
+                johnEyesMid.SetActive(true);
+            }
+            else if (pickNextDoorJohn == 3)
+            {
+                johnEyesRight.SetActive(true);
+            }
+        }
+    }
+
+    public void FlashingMonsters()
+    {
+        if (doorsTillPlayerDave == 0 || doorsTillPlayerJohn == 0)
+        {
+            if (flashedAwayLeft == true && pickNextDoorDave == 1)
+            {
+                flashedAwayDave = true;
+                daveEyesLeft.SetActive(false);
+            }
+            if (flashedAwayMid == true && pickNextDoorDave == 2 && doorsTillPlayerDave == 0)
+            {
+                flashedAwayDave = true;
+                daveEyesMid.SetActive(false);
+            }
+            if (flashedAwayMid == true && pickNextDoorJohn == 2 && doorsTillPlayerJohn == 0)
+            {
+                flashedAwayJohn = true;
+                johnEyesMid.SetActive(false);
+            }
+            if (flashedAwayRight == true && pickNextDoorJohn == 3)
+            {
+                flashedAwayJohn = true;
+                johnEyesRight.SetActive(false);
+            }
+        }
+        else
+        {
+            flashedAwayLeft = false;
+            flashedAwayMid = false;
+            flashedAwayRight = false;
+        }
+    }
+
+    public void BasicMonsterPhase()
+    {
+        if (totalDoorsCounter >= doorCounterNumber) //if you go forward
+        {
+            Debug.Log("if u go forward");
+            
+
+            // if ((doorsTillPlayerDave == 0 && flashedAwayDave == true) || (doorsTillPlayerJohn == 0 && flashedAwayJohn == true)) //they got to you && you scared them away
+            // {
+                Debug.Log("they got to the door && u scred them");
+
+                if (totalDoorsCounter < 30)
+                {
+                    if (doorsTillPlayerDave != 0 && doorsTillPlayerJohn != 0)
+                    {
+                        doorsTillPlayerDave --;
+                        doorsTillPlayerJohn --;
+                    }
+                    
+                    //3-5
+                    if (doorsTillPlayerDave == 0 && doorsTillPlayerJohn == 0 && flashedAwayDave == true && flashedAwayJohn == true)
+                    {
+                        doorsTillPlayerDave = Random.Range(3,6);
+                        pickNextDoorDave = Random.Range(1,3);
+                        doorsTillPlayerJohn = Random.Range(3,6);
+                        pickNextDoorJohn = Random.Range(2,4);
+                    }
+
+
+                    if (doorsTillPlayerDave == 0 && flashedAwayDave == true)
+                    {
+                        doorsTillPlayerDave = Random.Range(3,6);
+                        pickNextDoorDave = Random.Range(1,3); //x through y-1
+                        doorsTillPlayerJohn --;
+                    }
+
+                    if (doorsTillPlayerJohn == 0 && flashedAwayJohn == true)
+                    {
+                        doorsTillPlayerJohn = Random.Range(3,6);
+                        pickNextDoorJohn = Random.Range(2,4);
+                        doorsTillPlayerDave --;
+                    }
+
+                    if (doorsTillPlayerDave < 0 || doorsTillPlayerJohn < 0)
+                    {
+                        deathScreen.SetActive(true);
+                    }
+                    
+                    flashedAwayDave = false;
+                    flashedAwayJohn = false;
+                    flashedAwayLeft = false;
+                    flashedAwayMid = false;
+                    flashedAwayRight = false;
+                    
+
+                    Debug.Log("TDC under 30");
+
+                }
+                else if (totalDoorsCounter == 30)
+                {
+                    Debug.Log("30");
+                    demoScreen.SetActive(true);
+                    // safe room
+                }
+                else if (30 < totalDoorsCounter && totalDoorsCounter < 60)
+                {
+                    Debug.Log("30-60");
+                    //3-4
+                }
+                else if (totalDoorsCounter == 60)
+                {
+                    Debug.Log("60");
+                    // safe
+                }
+                else if (60 < totalDoorsCounter && totalDoorsCounter < 90)
+                {
+                    //2-4
+                }
+                else if (totalDoorsCounter == 90)
+                {
+                    // safe
+                }
+                else if (90 < totalDoorsCounter && totalDoorsCounter < 100)
+                {
+                    //1-3
+                }
+                else if (totalDoorsCounter == 100)
+                {
+                    //WIN
+                }
+            // }
+            // else if (doorsTillPlayerDave == 0 && flashedAwayDave == false) //they got to you && you did not scare them away
+            // {
+            //     //DIE
+            // }
+            // else
+            // {
+                
+            // }
+        }
+        else if (totalDoorsCounter < doorCounterNumber)
+        {
+            //go backwards. monsters enter mid
         }
     }
 }

@@ -53,5 +53,8 @@ TagManager:
   - name: Door
     uniqueID: 378560525
     locked: 0
+  - name: DJEyeIndicators
+    uniqueID: 1926641949
+    locked: 0
   m_RenderingLayers:
   - Default

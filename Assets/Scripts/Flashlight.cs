@@ -5,8 +5,11 @@ using System;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
+
 public class Flashlight : MonoBehaviour
 {
+   public BasicMonsterManager basicMonsterManagerRefrence;
+
    public bool turnedBack;
 
    public GameObject leftDoor;
@@ -55,13 +58,15 @@ public class Flashlight : MonoBehaviour
    public float justExitLeft = 1f;
    public float justExitRight = 1f;
 
-   public float timeToEnterDoor = 0.3f;
+   public float timeToEnterDoor = 1f;
 
    public int midDoorCounter;
    public int leftDoorCounter;
    public int rightDoorCounter;
    public int backDoorCounter;
    public int totalDoorsCounter;
+
+   public float timeNeededToFlashAway = 0.3f;
 
    void Start()
    {
@@ -128,16 +133,31 @@ public class Flashlight : MonoBehaviour
         if (leftFlashing == true)
         {
             leftFlashTime += Time.deltaTime;
+            if (leftFlashTime >= timeNeededToFlashAway)
+            {
+                basicMonsterManagerRefrence.flashedAwayLeft = true;
+                basicMonsterManagerRefrence.FlashingMonsters();
+            }
         }
 
         if (midFlashing == true)
         {
             middleFlashTime += Time.deltaTime;
+            if (middleFlashTime >= timeNeededToFlashAway)
+            {
+                basicMonsterManagerRefrence.flashedAwayMid = true;
+                basicMonsterManagerRefrence.FlashingMonsters();
+            }
         }
         
         if (rightFlashing == true)
         {
             rightFlashTime += Time.deltaTime;
+            if (rightFlashTime >= timeNeededToFlashAway)
+            {
+                basicMonsterManagerRefrence.flashedAwayRight = true;
+                basicMonsterManagerRefrence.FlashingMonsters();
+            }
         }
 
         moveToNextDoor();
@@ -163,44 +183,71 @@ public class Flashlight : MonoBehaviour
         {
             leftDoorCounter += 1;
             totalDoorsCounter += 1;
+            basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
+            basicMonsterManagerRefrence.BasicMonsterPhase();
+            basicMonsterManagerRefrence.MonstersInYourDoors();
 
             middleDoorEnterTimer = 0;
             leftDoorEnterTimer = 0;
             rightDoorEnterTimer = 0;
             backDoorEnterTimer = 0;
+
+            leftFlashTime = 0;
+            middleFlashTime = 0;
+            rightFlashTime = 0;
         }
 
         if (middleDoorEnterTimer >= timeToEnterDoor)
         {
             midDoorCounter += 1;
             totalDoorsCounter += 1;
+            basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
+            basicMonsterManagerRefrence.BasicMonsterPhase();
+            basicMonsterManagerRefrence.MonstersInYourDoors();
 
             middleDoorEnterTimer = 0;
             leftDoorEnterTimer = 0;
             rightDoorEnterTimer = 0;
             backDoorEnterTimer = 0;
+
+            leftFlashTime = 0;
+            middleFlashTime = 0;
+            rightFlashTime = 0;
         }
 
         if (rightDoorEnterTimer >= timeToEnterDoor)
         {
             rightDoorCounter += 1;
             totalDoorsCounter += 1;
+            basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
+            basicMonsterManagerRefrence.BasicMonsterPhase();
+            basicMonsterManagerRefrence.MonstersInYourDoors();
 
             middleDoorEnterTimer = 0;
             leftDoorEnterTimer = 0;
             rightDoorEnterTimer = 0;
             backDoorEnterTimer = 0;
+
+            leftFlashTime = 0;
+            middleFlashTime = 0;
+            rightFlashTime = 0;
         }
 
         if (backDoorEnterTimer >= timeToEnterDoor)
         {
             backDoorCounter += 1;
             totalDoorsCounter -= 1;
+            basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
+            basicMonsterManagerRefrence.BasicMonsterPhase();
 
             middleDoorEnterTimer = 0;
             leftDoorEnterTimer = 0;
             rightDoorEnterTimer = 0;
             backDoorEnterTimer = 0;
+
+            leftFlashTime = 0;
+            middleFlashTime = 0;
+            rightFlashTime = 0;
         }
 
         
@@ -282,6 +329,7 @@ public class Flashlight : MonoBehaviour
 
                 leftFlashing = false;
                 leftDoorSprite.color = Color.black;
+                Debug.Log("enter right");
             }
             else 
             {
