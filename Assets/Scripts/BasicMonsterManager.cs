@@ -131,31 +131,41 @@ public class BasicMonsterManager : MonoBehaviour
                 }
 
 
-                if (doorsTillPlayerDave == 0 && flashedAwayDave == true)
+                else if (doorsTillPlayerDave == 0 && flashedAwayDave == true)
                 {
                     doorsTillPlayerDave = Random.Range(3,6);
                     pickNextDoorDave = Random.Range(1,3); //x through y-1
                     doorsTillPlayerJohn --;
                 }
 
-                if (doorsTillPlayerJohn == 0 && flashedAwayJohn == true)
+                else if (doorsTillPlayerJohn == 0 && flashedAwayJohn == true)
                 {
                     doorsTillPlayerJohn = Random.Range(3,6);
                     pickNextDoorJohn = Random.Range(2,4);
                     doorsTillPlayerDave --;
                 }
 
-                if ((doorsTillPlayerDave == 0 && flashedAwayDave == false) || (doorsTillPlayerJohn == 0 && flashedAwayJohn == false))
+                else if (doorsTillPlayerDave < 0 || doorsTillPlayerJohn < 0)
+                {
+                    deathScreen.SetActive(true);
+                }
+
+                else if ((doorsTillPlayerDave == 0 && flashedAwayDave == false) || (doorsTillPlayerJohn == 0 && flashedAwayJohn == false))
                 {
                     // deathScreen.SetActive(true);
                     doorsTillPlayerDave --;
                     doorsTillPlayerJohn --;
+                    if (doorsTillPlayerDave < 0 || doorsTillPlayerJohn < 0)
+                    {
+                        deathScreen.SetActive(true);
+                    }
 
                 }
 
-                if (doorsTillPlayerDave < 0 || doorsTillPlayerJohn < 0)
+                else if (doorsTillPlayerDave != 0 && doorsTillPlayerJohn != 0)
                 {
-                    deathScreen.SetActive(true);
+                    doorsTillPlayerDave --;
+                    doorsTillPlayerJohn --;
                 }
                     
                 flashedAwayDave = false;
@@ -167,12 +177,6 @@ public class BasicMonsterManager : MonoBehaviour
 
                 Debug.Log("TDC under 30");
                 instructions.SetActive(false);
-
-                if (doorsTillPlayerDave != 0 && doorsTillPlayerJohn != 0)
-                {
-                    doorsTillPlayerDave --;
-                    doorsTillPlayerJohn --;
-                }
 
             }
             else if (totalDoorsCounter == 30)
