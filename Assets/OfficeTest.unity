@@ -25,7 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
-  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
+  m_SubtractiveShadowColor: {r: 0.10435208, g: 0.16826804, b: 0.3301887, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 20201, guid: 0000000000000000f000000000000000, type: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 69c20bfa6892e4600a6f6fd5f332f750, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -136,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &97834179
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2122,7 +2122,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1274937993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2718,6 +2718,8 @@ MonoBehaviour:
   rightDoorEnterTimer: 0
   middleDoorEnterTimer: 0
   backDoorEnterTimer: 0
+  doorJustOpenedTimer: 0
+  doorMoveAnimTime: 0.6
   doorEnterText: {fileID: 97834180}
   totalDoorsEnteredText: {fileID: 1167882655}
   flashLightOn: 0
@@ -2729,13 +2731,14 @@ MonoBehaviour:
   justExitMiddle: 0
   justExitLeft: 1
   justExitRight: 1
-  timeToEnterDoor: 1
+  timeToEnterDoor: 0.2
   midDoorCounter: 0
   leftDoorCounter: 0
   rightDoorCounter: 0
   backDoorCounter: 0
   totalDoorsCounter: 0
   timeNeededToFlashAway: 0.3
+  cameraAnimator: {fileID: 1939232984}
 --- !u!4 &1707405153
 Transform:
   m_ObjectHideFlags: 0
@@ -2764,6 +2767,7 @@ GameObject:
   - component: {fileID: 1939232979}
   - component: {fileID: 1939232982}
   - component: {fileID: 1939232983}
+  - component: {fileID: 1939232984}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2788,8 +2792,8 @@ Camera:
   m_GameObject: {fileID: 1939232978}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.122641504, g: 0.07154118, b: 0.028346388, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -2902,6 +2906,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turned: 0
+--- !u!95 &1939232984
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1939232978}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6f901abc4fbe542b0af1b3e1e2588c1a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2044208523
 GameObject:
   m_ObjectHideFlags: 0

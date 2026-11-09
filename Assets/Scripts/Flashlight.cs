@@ -36,13 +36,16 @@ public class Flashlight : MonoBehaviour
    public float middleDoorEnterTimer;
    public float backDoorEnterTimer;
 
+   public float doorJustOpenedTimer;
+   public float doorMoveAnimTime;
+
    public TMP_Text doorEnterText;
 
    public TMP_Text totalDoorsEnteredText;
    
-   private bool lDoorSelect = false;
-   private bool mDoorSelect = false;
-   private bool rDoorSelect = false;
+   public bool lDoorSelect = false;
+   public bool mDoorSelect = false;
+   public bool rDoorSelect = false;
    //private bool bDoorSelect = false;
 
    public bool flashLightOn = false;
@@ -68,12 +71,16 @@ public class Flashlight : MonoBehaviour
 
    public float timeNeededToFlashAway = 0.3f;
 
+   public Animator cameraAnimator;
+
    void Start()
    {
     leftDoorSprite.color = Color.black;
     middleDoorSprite.color = Color.black;
     rightDoorSprite.color = Color.black;
     backDoorSprite.color = Color.black;
+
+    basicMonsterManagerRefrence.stallTime = doorMoveAnimTime;
    }
 
 
@@ -95,12 +102,15 @@ public class Flashlight : MonoBehaviour
         justExitMiddle += Time.deltaTime;
         justExitLeft += Time.deltaTime;
         justExitRight += Time.deltaTime;
+
+        doorJustOpenedTimer += Time.deltaTime;
+
         
         flashTimeText.text = "Left: " + leftFlashTime + "\n" + "Mid: " + middleFlashTime + "\n" + "Right: " + rightFlashTime + "\n" + "Back: " + backFlashTime;
         doorEnterText.text = "Left: " + leftDoorEnterTimer + "\n" + "Mid: " + middleDoorEnterTimer + "\n" + "Right: " + rightDoorEnterTimer + "\n" + "Back: " + backDoorEnterTimer;
         totalDoorsEnteredText.text = "Total: " + totalDoorsCounter + "\n" + "Left: " + leftDoorCounter + "\n" + "Mid: " + midDoorCounter + "\n" + "Right: " + rightDoorCounter + "\n" + "Back: " + backDoorCounter;
 
-        if (Input.GetKey(KeyCode.A) && mDoorSelect == false && rDoorSelect == false && turnedBack == false)
+        if (Input.GetKey(KeyCode.A) && (doorJustOpenedTimer >= doorMoveAnimTime) && (mDoorSelect == false && rDoorSelect == false && turnedBack == false))
         {    
             lDoorSelect = true;
             leftDoorEnterTimer += Time.deltaTime;
@@ -110,7 +120,7 @@ public class Flashlight : MonoBehaviour
             lDoorSelect = false;
         }
 
-        if (Input.GetKey(KeyCode.W) && lDoorSelect == false && rDoorSelect == false && turnedBack == false)
+        if (Input.GetKey(KeyCode.W) && (doorJustOpenedTimer >= doorMoveAnimTime) && (lDoorSelect == false && rDoorSelect == false && turnedBack == false))
         {    
             mDoorSelect = true;
             middleDoorEnterTimer += Time.deltaTime;
@@ -120,12 +130,12 @@ public class Flashlight : MonoBehaviour
             mDoorSelect = false;
         }
 
-        if (Input.GetKey(KeyCode.D) && lDoorSelect == false && mDoorSelect == false && turnedBack == false)
+        if (Input.GetKey(KeyCode.D) && (doorJustOpenedTimer >= doorMoveAnimTime) && (lDoorSelect == false && mDoorSelect == false && turnedBack == false))
         {    
             rDoorSelect = true;
             rightDoorEnterTimer += Time.deltaTime;
         }
-        else if (Input.GetKeyUp(KeyCode.D))
+        else if (Input.GetKeyUp(KeyCode.D) && (doorJustOpenedTimer >= doorMoveAnimTime) )
         {
             rDoorSelect = false;
         }
@@ -183,75 +193,57 @@ public class Flashlight : MonoBehaviour
         {
             leftDoorCounter += 1;
             totalDoorsCounter += 1;
-            basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
-            basicMonsterManagerRefrence.BasicMonsterPhase();
-            basicMonsterManagerRefrence.MonstersInYourDoors();
-
-            middleDoorEnterTimer = 0;
-            leftDoorEnterTimer = 0;
-            rightDoorEnterTimer = 0;
-            backDoorEnterTimer = 0;
-
-            leftFlashTime = 0;
-            middleFlashTime = 0;
-            rightFlashTime = 0;
+            cameraAnimator.SetTrigger("LeftCameraZoom");
+            enterDoorDefaultSettings();
         }
 
         if (middleDoorEnterTimer >= timeToEnterDoor)
         {
             midDoorCounter += 1;
             totalDoorsCounter += 1;
-            basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
-            basicMonsterManagerRefrence.BasicMonsterPhase();
-            basicMonsterManagerRefrence.MonstersInYourDoors();
-
-            middleDoorEnterTimer = 0;
-            leftDoorEnterTimer = 0;
-            rightDoorEnterTimer = 0;
-            backDoorEnterTimer = 0;
-
-            leftFlashTime = 0;
-            middleFlashTime = 0;
-            rightFlashTime = 0;
+            cameraAnimator.SetTrigger("MidCameraZoom");
+            enterDoorDefaultSettings();
         }
 
         if (rightDoorEnterTimer >= timeToEnterDoor)
         {
             rightDoorCounter += 1;
             totalDoorsCounter += 1;
-            basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
-            basicMonsterManagerRefrence.BasicMonsterPhase();
-            basicMonsterManagerRefrence.MonstersInYourDoors();
-
-            middleDoorEnterTimer = 0;
-            leftDoorEnterTimer = 0;
-            rightDoorEnterTimer = 0;
-            backDoorEnterTimer = 0;
-
-            leftFlashTime = 0;
-            middleFlashTime = 0;
-            rightFlashTime = 0;
+            cameraAnimator.SetTrigger("RightCameraZoom");
+            enterDoorDefaultSettings();
         }
 
         if (backDoorEnterTimer >= timeToEnterDoor)
         {
             backDoorCounter += 1;
             totalDoorsCounter -= 1;
-            basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
-            basicMonsterManagerRefrence.BasicMonsterPhase();
-
-            middleDoorEnterTimer = 0;
-            leftDoorEnterTimer = 0;
-            rightDoorEnterTimer = 0;
-            backDoorEnterTimer = 0;
-
-            leftFlashTime = 0;
-            middleFlashTime = 0;
-            rightFlashTime = 0;
+            enterDoorDefaultSettings();
         }
 
-        
    }
+   
+   public void enterDoorDefaultSettings()
+    {
+        basicMonsterManagerRefrence.totalDoorsCounter = totalDoorsCounter;
+        basicMonsterManagerRefrence.BasicMonsterPhase();
+        basicMonsterManagerRefrence.animationStall = 0;
+        
+
+        middleDoorEnterTimer = 0;
+        leftDoorEnterTimer = 0;
+        rightDoorEnterTimer = 0;
+        backDoorEnterTimer = 0;
+
+        doorJustOpenedTimer = 0;
+
+        leftFlashTime = 0;
+        middleFlashTime = 0;
+        rightFlashTime = 0;
+
+        lDoorSelect = false;
+        mDoorSelect = false;
+        rDoorSelect = false;
+    }
 
    public void flashTheMiddleDoor()
    {
@@ -329,7 +321,7 @@ public class Flashlight : MonoBehaviour
 
                 leftFlashing = false;
                 leftDoorSprite.color = Color.black;
-                Debug.Log("enter right");
+                // Debug.Log("enter right");
             }
             else 
             {

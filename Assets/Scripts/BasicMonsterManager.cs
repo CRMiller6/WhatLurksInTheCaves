@@ -33,6 +33,9 @@ public class BasicMonsterManager : MonoBehaviour
     public GameObject demoScreen;
     public GameObject instructions;
 
+    public float animationStall;
+    public float stallTime;
+
     void Awake()
     {
         
@@ -50,34 +53,39 @@ public class BasicMonsterManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        animationStall += Time.deltaTime;
+
+        if (animationStall >= stallTime)
+        {
+            if (doorsTillPlayerDave == 0)
+            {
+                if (pickNextDoorDave == 1 && flashedAwayDave == false)
+                {
+                    daveEyesLeft.SetActive(true);
+                }
+                else if (pickNextDoorDave == 2 && flashedAwayDave == false)
+                {
+                    daveEyesMid.SetActive(true);
+                }
+            }
+
+            if (doorsTillPlayerJohn == 0)
+            {
+                if (pickNextDoorJohn == 2 && flashedAwayJohn == false)
+                {
+                    johnEyesMid.SetActive(true);
+                }
+                else if (pickNextDoorJohn == 3 && flashedAwayJohn == false)
+                {
+                    johnEyesRight.SetActive(true);
+                }
+            }
+        }
     }
 
     public void MonstersInYourDoors()
     {
-        if (doorsTillPlayerDave == 0)
-        {
-            if (pickNextDoorDave == 1)
-            {
-                daveEyesLeft.SetActive(true);
-            }
-            else if (pickNextDoorDave == 2)
-            {
-                daveEyesMid.SetActive(true);
-            }
-        }
-
-        if (doorsTillPlayerJohn == 0)
-        {
-            if (pickNextDoorJohn == 2)
-            {
-                johnEyesMid.SetActive(true);
-            }
-            else if (pickNextDoorJohn == 3)
-            {
-                johnEyesRight.SetActive(true);
-            }
-        }
+        
     }
 
     public void FlashingMonsters()
