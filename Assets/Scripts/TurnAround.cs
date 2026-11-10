@@ -4,6 +4,8 @@ public class TurnAround : MonoBehaviour
 {
     public bool turned = false;
 
+    public Flashlight flashlightScript;
+
 
     public void Turn()
     {
@@ -12,13 +14,15 @@ public class TurnAround : MonoBehaviour
         if (turned == false)
         {
             turned = true;
-            Debug.Log("facing back");
+            flashlightScript.turnedBack = true;
+            // Debug.Log("facing back");
         }
 
         else if (turned == true)
         {
             turned = false;
-            Debug.Log("facing front");
+            flashlightScript.turnedBack = false;
+            // Debug.Log("facing front");
         }
     }
 
