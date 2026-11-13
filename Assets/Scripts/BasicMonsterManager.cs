@@ -55,7 +55,7 @@ public class BasicMonsterManager : MonoBehaviour
     {
         animationStall += Time.deltaTime;
 
-        if (animationStall >= stallTime)
+        if ((animationStall + 0.3) >= stallTime)
         {
             if (doorsTillPlayerDave == 0)
             {

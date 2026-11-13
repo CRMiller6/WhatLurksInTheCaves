@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 
+
+
 public class Flashlight : MonoBehaviour
 {
    public BasicMonsterManager basicMonsterManagerRefrence;
@@ -56,6 +58,10 @@ public class Flashlight : MonoBehaviour
    public int doorCounter = 0;
 
    public float flashLightCooldown = 0f;
+   public float flashLightBattery;
+   public float totalBatteryForSection;
+
+   public GameObject batteryBarsHolder;
 
    public float justExitMiddle = 1f;
    public float justExitLeft = 1f;
@@ -81,6 +87,7 @@ public class Flashlight : MonoBehaviour
     backDoorSprite.color = Color.black;
 
     basicMonsterManagerRefrence.stallTime = doorMoveAnimTime;
+    totalBatteryForSection = flashLightBattery;
    }
 
 
@@ -92,11 +99,41 @@ public class Flashlight : MonoBehaviour
             flashLightOnAndOff();
         }
 
-        if (flashLightOn == false)
+        if (flashLightOn == false || flashLightBattery <= 0)
         {
             stopFlashingTheLeftDoor();
             stopFlashingTheMiddleDoor();
             stopFlashingTheRightDoor();
+        }
+        else if (flashLightOn == true)
+        {
+            flashLightBattery -= Time.deltaTime;
+        }
+
+        if (flashLightBattery <= (totalBatteryForSection * 0.85))
+        {
+            Debug.Log("85% battery");
+            batteryBarsHolder.transform.GetChild(0).gameObject.SetActive(false);
+        }
+        if (flashLightBattery <= (totalBatteryForSection * 0.65))
+        {
+            Debug.Log("65% battery");
+            batteryBarsHolder.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        if (flashLightBattery <= (totalBatteryForSection * 0.45))
+        {
+            Debug.Log("45% battery");
+            batteryBarsHolder.transform.GetChild(2).gameObject.SetActive(false);
+        }
+        if (flashLightBattery <= (totalBatteryForSection * 0.25))
+        {
+            Debug.Log("25% battery");
+            batteryBarsHolder.transform.GetChild(3).gameObject.SetActive(false);
+        }
+        if (flashLightBattery <= 0)
+        {
+            Debug.Log("0% battery");
+            batteryBarsHolder.transform.GetChild(4).gameObject.SetActive(false);
         }
 
         justExitMiddle += Time.deltaTime;
@@ -106,7 +143,7 @@ public class Flashlight : MonoBehaviour
         doorJustOpenedTimer += Time.deltaTime;
 
         
-        flashTimeText.text = "Left: " + leftFlashTime + "\n" + "Mid: " + middleFlashTime + "\n" + "Right: " + rightFlashTime + "\n" + "Back: " + backFlashTime;
+        flashTimeText.text = "Flashlight Battery Left: " + flashLightBattery + " seconds"/*"Left: " + leftFlashTime + "\n" + "Mid: " + middleFlashTime + "\n" + "Right: " + rightFlashTime + "\n" + "Back: " + backFlashTime*/;
         doorEnterText.text = "Left: " + leftDoorEnterTimer + "\n" + "Mid: " + middleDoorEnterTimer + "\n" + "Right: " + rightDoorEnterTimer + "\n" + "Back: " + backDoorEnterTimer;
         totalDoorsEnteredText.text = "Total: " + totalDoorsCounter + "\n" + "Left: " + leftDoorCounter + "\n" + "Mid: " + midDoorCounter + "\n" + "Right: " + rightDoorCounter + "\n" + "Back: " + backDoorCounter;
 
@@ -135,12 +172,12 @@ public class Flashlight : MonoBehaviour
             rDoorSelect = true;
             rightDoorEnterTimer += Time.deltaTime;
         }
-        else if (Input.GetKeyUp(KeyCode.D) && (doorJustOpenedTimer >= doorMoveAnimTime) )
+        else if (Input.GetKeyUp(KeyCode.D) && (doorJustOpenedTimer >= doorMoveAnimTime))
         {
             rDoorSelect = false;
         }
 
-        if (leftFlashing == true)
+        if (leftFlashing == true && flashLightBattery > 0)
         {
             leftFlashTime += Time.deltaTime;
             if (leftFlashTime >= timeNeededToFlashAway)
@@ -150,7 +187,7 @@ public class Flashlight : MonoBehaviour
             }
         }
 
-        if (midFlashing == true)
+        if (midFlashing == true && flashLightBattery > 0)
         {
             middleFlashTime += Time.deltaTime;
             if (middleFlashTime >= timeNeededToFlashAway)
@@ -160,7 +197,7 @@ public class Flashlight : MonoBehaviour
             }
         }
         
-        if (rightFlashing == true)
+        if (rightFlashing == true && flashLightBattery > 0)
         {
             rightFlashTime += Time.deltaTime;
             if (rightFlashTime >= timeNeededToFlashAway)
@@ -175,7 +212,7 @@ public class Flashlight : MonoBehaviour
 
    public void flashLightOnAndOff()
    {
-        if (flashLightOn == false)
+        if (flashLightOn == false  && flashLightBattery > 0)
         {
             flashLightOn = true;
             flashLightCooldown = 0;
@@ -249,7 +286,7 @@ public class Flashlight : MonoBehaviour
    {
         if (justExitMiddle >= 0.1)
         {    
-            if (flashLightOn == true)
+            if (flashLightOn == true  && flashLightBattery > 0)
             {
                 middleDoorSprite.color = Color.yellow;
                 midFlashing = true;
@@ -280,7 +317,7 @@ public class Flashlight : MonoBehaviour
    {
         if (justExitLeft >= 0.1)
         {
-            if (flashLightOn == true)
+            if (flashLightOn == true  && flashLightBattery > 0)
             {
                 leftDoorSprite.color = Color.yellow;
                 leftFlashing = true;
@@ -311,7 +348,7 @@ public class Flashlight : MonoBehaviour
    {
         if (justExitRight >= 0.1)
         {
-            if (flashLightOn == true)
+            if (flashLightOn == true && flashLightBattery > 0)
             {
                 rightDoorSprite.color = Color.yellow;
                 rightFlashing = true;
