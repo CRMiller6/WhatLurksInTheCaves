@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using TMPro;
 
 public class BasicMonsterManager : MonoBehaviour
 {
@@ -30,11 +31,13 @@ public class BasicMonsterManager : MonoBehaviour
     public GameObject johnEyesRight; 
 
     public GameObject deathScreen;
+    public TMP_Text doorDeathTell;
     public GameObject demoScreen;
     public GameObject instructions;
 
     public float animationStall;
     public float stallTime;
+
 
     void Awake()
     {
@@ -153,10 +156,11 @@ public class BasicMonsterManager : MonoBehaviour
                     doorsTillPlayerDave --;
                 }
 
-                else if (doorsTillPlayerDave < 0 || doorsTillPlayerJohn < 0)
-                {
-                    deathScreen.SetActive(true);
-                }
+                // else if (doorsTillPlayerDave < 0 || doorsTillPlayerJohn < 0)
+                // {
+                //     deathScreen.SetActive(true);
+                //     doorDeathTell.text = "You died on door: " + totalDoorsCounter;
+                // }
 
                 else if ((doorsTillPlayerDave == 0 && flashedAwayDave == false) || (doorsTillPlayerJohn == 0 && flashedAwayJohn == false))
                 {
@@ -166,6 +170,7 @@ public class BasicMonsterManager : MonoBehaviour
                     if (doorsTillPlayerDave < 0 || doorsTillPlayerJohn < 0)
                     {
                         deathScreen.SetActive(true);
+                        doorDeathTell.text = "You died on door: " + totalDoorsCounter;
                     }
 
                 }
